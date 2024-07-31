@@ -57,7 +57,7 @@ async def get_letter(message: Message, state: FSMContext):
         if message.text.lower() in word:
             await update_guess_word(message.from_user.id, message.text.lower(), word)
             if await is_win(message.from_user.id):
-                await message.answer(f'Вы угадали!!! слово: {word}')
+                await message.answer(f'Вы угадали!!! слово: {word}. \n Напишите /play чтобы начать игру')
                 await delete_session(message.from_user.id)
                 await state.clear()
             else:
@@ -67,7 +67,7 @@ async def get_letter(message: Message, state: FSMContext):
         else:
             await auto_decriment_lifes(message.from_user.id)
             if await is_lose(message.from_user.id):
-                await message.answer(f'Вы проиграли. {gallows[0]} Слово было: {word}')
+                await message.answer(f'Вы проиграли. {gallows[0]} Слово было: {word}. \n Напишите /play чтобы начать игру')
                 await delete_session(message.from_user.id)
                 await state.clear()
             else:
