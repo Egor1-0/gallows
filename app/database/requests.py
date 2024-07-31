@@ -8,6 +8,10 @@ async def get_lifes(tg_id):
     async with async_session() as session:
         return (await session.scalar(select(Session).where(Session.tg_id == tg_id))).lifes
 
+async def get_used_letters(tg_id):
+    async with async_session() as session:
+        return (await session.scalar(select(Session).where(Session.tg_id == tg_id))).used_letters
+
 async def get_guess_word(tg_id):
     async with async_session() as session:
         return (await session.scalar(select(Session).where(Session.tg_id == tg_id))).guess_word

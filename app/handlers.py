@@ -4,8 +4,8 @@ from aiogram.types import Message
 from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup 
-from app.database.push import set_word, update_guess_word, auto_decriment_lifes
-from app.database.requests import get_row, get_guess_word, is_win, is_lose, get_lifes
+from app.database.push import set_word, update_guess_word, auto_decriment_lifes, insert_letter
+from app.database.requests import get_row, get_guess_word, is_win, is_lose, get_lifes, get_used_letters
 from app.database.delete import delete_session
 
 file = open('words/words.txt')
@@ -51,16 +51,18 @@ async def play(message: Message, state: FSMContext):
 
 @router.message(Game.letter)
 async def get_letter(message: Message, state: FSMContext):
-    if len(message.text) == 1:
+    if len(message.text.lower()) == 1:
+        await insert_letter(message.from_user.id, message.text)
         word = (await get_row(message.from_user.id)).original_word
-        if message.text in word:
-            await update_guess_word(message.from_user.id, message.text, word)
+        if message.text.lower() in word:
+            await update_guess_word(message.from_user.id, message.text.lower(), word)
             if await is_win(message.from_user.id):
                 await message.answer(f'Вы угадали!!! слово: {word}')
                 await delete_session(message.from_user.id)
                 await state.clear()
             else:
-                await message.answer(f'Вы угадали букву: {await get_guess_word(message.from_user.id)}')
+                await message.answer(f'Вы угадали букву: {await get_guess_word(message.from_user.id)}. \
+                                    \n Использованные буквы: {await get_used_letters(message.from_user.id)}')
             
         else:
             await auto_decriment_lifes(message.from_user.id)
@@ -69,10 +71,12 @@ async def get_letter(message: Message, state: FSMContext):
                 await delete_session(message.from_user.id)
                 await state.clear()
             else:
-                await message.answer(gallows[await get_lifes(message.from_user.id)])
+                await message.answer(f'{gallows[await get_lifes(message.from_user.id)]} \
+                                    \n Использованные буквы: {await get_used_letters(message.from_user.id)}')
 
     else:
-        await message.answer('Вы должны писать по одной букве')
+        await message.answer('Вы должны писать по одной букве. \
+                                    \n Использованные буквы: {await get_used_letters(message.from_user.id)}')
 
 
 """

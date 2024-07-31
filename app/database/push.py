@@ -6,6 +6,12 @@ async def set_word(tg_id, word):
         session.add(Session(tg_id = tg_id, original_word = word, guess_word = '_'*len(word)))
         await session.commit()
 
+async def insert_letter(tg_id, letter):
+    async with async_session() as session:
+        data = await session.scalar(select(Session).where(Session.tg_id == tg_id))
+        data.used_letters += letter
+        await session.commit()
+
 async def update_guess_word(tg_id, letter, word):
     async with async_session() as session:
         data = await session.scalar(select(Session).where(Session.tg_id == tg_id))
