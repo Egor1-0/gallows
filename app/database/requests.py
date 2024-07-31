@@ -1,0 +1,23 @@
+from app.database.models import async_session, Session
+from sqlalchemy import select
+async def get_row(tg_id):
+    async with async_session() as session:
+        return await session.scalar(select(Session).where(Session.tg_id == tg_id))
+
+async def get_lifes(tg_id):
+    async with async_session() as session:
+        return (await session.scalar(select(Session).where(Session.tg_id == tg_id))).lifes
+
+async def get_guess_word(tg_id):
+    async with async_session() as session:
+        return (await session.scalar(select(Session).where(Session.tg_id == tg_id))).guess_word
+
+async def is_win(tg_id):
+    async with async_session() as session:
+        data = await session.scalar(select(Session).where(Session.tg_id == tg_id))
+        return data.guess_word == data.original_word
+
+async def is_lose(tg_id):
+    async with async_session() as session:
+        data = await session.scalar(select(Session).where(Session.tg_id == tg_id))
+        return data.lifes == 0
