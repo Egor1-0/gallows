@@ -1,4 +1,5 @@
-from app.database.models import async_session, Session
+from app.database.models.models import Session
+from app.database.models.session import async_session
 from sqlalchemy import select
 async def get_row(tg_id):
     async with async_session() as session:

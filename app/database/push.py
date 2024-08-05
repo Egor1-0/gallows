@@ -1,4 +1,5 @@
-from app.database.models import async_session, Session
+from app.database.models.models import Session
+from app.database.models.session import async_session
 from sqlalchemy import select
 
 async def set_word(tg_id, word):

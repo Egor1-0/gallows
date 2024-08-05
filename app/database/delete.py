@@ -1,4 +1,5 @@
-from app.database.models import Session, async_session
+from app.database.models.models import Session
+from app.database.models.session import async_session
 from sqlalchemy import delete
 
 async def delete_session(tg_id):

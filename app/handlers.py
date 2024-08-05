@@ -11,7 +11,7 @@ from app.database.delete import delete_session
 from app.data import gallows
 from app.filters import Len_message, Is_in_word
 
-file = open('words/words.txt')
+file = open('app/words/words.txt')
 words_list = []
 for line in file:
     words_list.extend(line.split())

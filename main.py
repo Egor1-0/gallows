@@ -7,7 +7,7 @@ from aiogram.enums import ParseMode
 from dotenv import load_dotenv
 
 from app.handlers import router
-from app.database.models import async_main
+from app.database.models.session import async_main
 
 load_dotenv()
 
