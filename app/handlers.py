@@ -3,13 +3,13 @@ from aiogram import Router, F
 from aiogram.types import Message
 from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State, StatesGroup 
 
 from app.database.push import set_word, update_guess_word, auto_decriment_lifes, insert_letter
 from app.database.requests import get_row, get_guess_word, is_win, is_lose, get_lifes, get_used_letters
 from app.database.delete import delete_session
 from app.data import gallows
 from app.filters import Len_message, Is_in_word
+from app.states import Game
 
 file = open('app/words/words.txt')
 words_list = []
@@ -21,8 +21,7 @@ file.close()
 
 router = Router()
 
-class Game(StatesGroup):
-    letter = State()
+
 
 @router.message(CommandStart())
 async def start(message: Message):
